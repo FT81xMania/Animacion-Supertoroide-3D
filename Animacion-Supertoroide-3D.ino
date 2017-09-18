@@ -1,9 +1,24 @@
+/*********************************************************************
+* Animacion-Supertoroide-3D                                          *
+* Esto es un pequeño ejemplo para mostrar las prestaciones de cálcu- *
+* lo de las placas STM32F407. Se ha utilizado una pantalla FT811 pa- *
+* la visualización gráfica. Se muestra un Supertoroide (superficie   *
+* 3D perteneciente a la familia de las Supercuadricas), en el cual   *
+* se ha animado unos de los parámetros que afectan a la geometría de *
+* la superficie. A continuación se calcula de forma paramétrica los  *
+* vértices de la figura y la intensidad de un foco de luz que se re- *
+* fleja en su superficie. Dicha intensidad se utiliza para variar el *
+* color de los puntos dibujados con la FT811, proyectándolos desde el*
+* espacio 3D al tamaño de vista de la pantalla a 800x480 píxeles.    *
+* Autor: RndMnkIII (rndmnkiii@gmail.com). 2017                       *
+* Ft81xTeam -> https://foro.ft81xmania.com                           *
+*********************************************************************/
 #define ARM_MATH_CM4
 #include "arm_math.h" 
 #include <math.h>
 //#include <EEPROM.h> 
 #include <SPI.h>
-#include <GD23STM32.h>
+#include <GD2UB.h>
 
 #include "ColorRGB.h"
 #define WITH_FPU 1
