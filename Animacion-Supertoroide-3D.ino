@@ -58,69 +58,7 @@ int sube=1;
 int16_t coord2Dx[1008];
 int16_t coord2Dy[1008];
 //Para almacenar la luminacia (calculo del reflejo de luz)
-uint8_t lumi[1152];  
-
-//Rotamos sobre el eje X, A radianes, y sobre el eje Z, B radianes
-//devuelve el numero de vertices a dibujar, como máximo 512
-uint16_t calculaToroide(float A, float B)
-{
-  const float theta_inc = demo2PI / ThetaNsegs;
-  const float phi_inc = demo2PI / PhiNsegs;
-  const float R1 = 1.0f;
-  const float R2 = 2.0f;
-  const float K2 = 5.0f;
-  const uint16_t AnchoPanta = 800;
-  const uint16_t AltoPanta = 480;
-  uint16_t cuenta=0;
-
-  //calculalos K1 basado en el tamaño de pantalla
-  const float K1 = AnchoPanta*K2*3.0/(8.0*(R1+R2)); //desplazado 3/4 desde el centro hasta el lado de la pantalla
-
-  //precalculamos valores de seno y coseno de A y B
-  float cosA = arm_cos_f32(A), sinA = arm_sin_f32(A);
-  float cosB = arm_cos_f32(B), sinB = arm_sin_f32(B);
-
-  //Theta gira alrededor del circulo (corte seccional) del toroide
-  for(float theta=0.0f; theta < demo2PI; theta+=theta_inc)
-  {
-    //precalculamos seno y coseno de theta
-    float costheta = arm_cos_f32(theta), sintheta = arm_sin_f32(theta);
-
-    //phi gira alrededor del eje de revolucion del toroide
-    for(float phi=0.0f; phi < demo2PI; phi+=phi_inc)
-    {
-      //precalculamos seno y coseno de phi
-      float cosphi = arm_cos_f32(phi), sinphi = arm_sin_f32(phi);
-
-      //coordenadas x,y del circulo antes de rotarlo alrededor del eje de revolucion
-      float circlex = R2 + R1 * costheta;
-      float circley = R1 * sintheta;
-
-      //Coordenadas 3d despues de la rotacion alrededor del eje de revolucion
-      float x = circlex * (cosB*cosphi + sinA*sinB*sinphi) - circley*cosA*sinB;
-      float y = circlex * (sinB*cosphi - sinA*cosB*sinphi) + circley*cosA*cosB;
-      float z = K2 + cosA*circlex*sinphi + circley*sinA;
-      float ooz = 1.0/z;
-
-      //proyeccion del vertice 3d en coordenadas 2d de pantalla
-      int xp = (int16_t) (AnchoPanta/2 + K1*ooz*x);
-      int yp = (int16_t) (AltoPanta/2 - K1*ooz*y);
-
-      //metodo "rapido y sucio" para calcular la luminancia
-      //-sqrt(2) <= L <= sqrt(2)
-      float L = cosphi*costheta*sinB - cosA*costheta*sinphi - sinA*sintheta + cosB *(cosA*sintheta - costheta*sinA*sinphi);
-      //Si L < 0 la superficie apunta alejandose de nosotros y no se dibuja.
-      if(L > 0.0f)
-      {
-        coord2Dx[cuenta]=xp;
-        coord2Dy[cuenta]=yp;
-        lumi[cuenta]=(uint8_t) (L * 180.5f); //L como maximo vale sqrt(2.0) -> 1.414214
-        cuenta++;
-      }  
-    }
-  } 
-  return cuenta;
-}
+uint8_t lumi[1008];  
 
 float potencia(float f, float p)
 {
@@ -214,6 +152,7 @@ float square(float t)
 }
 
 // 0.0 <= t <= 1.0
+//crear animaciones con aceleración para movimientos más naturales
 float ParametricBlend(float t)
 {
     float sqt = square(t);
@@ -233,9 +172,8 @@ void loop()
 {
     uint16_t nverts;
     
-    //nverts=calculaToroide(incAnguloA,incAnguloB);
-    //nverts=calculaSuperToroide(incAnguloA,incAnguloB, 0.8f+ParametricBlend(tim1), 1.5f);
     nverts=calculaSuperToroide(incAnguloA,incAnguloB, 1.75f, 0.7f+2*ParametricBlend(tim1));
+  
     if(sube == 1)
       tim1+=0.005;
     else
