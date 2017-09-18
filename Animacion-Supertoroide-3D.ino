@@ -12,6 +12,8 @@
 * espacio 3D al tamaño de vista de la pantalla a 800x480 píxeles.    *
 * Basado en el código de Andy Sloane:                                *
 * https://www.a1k0n.net/2011/07/20/donut-math.html                   *
+* y el artículo de Paul Bourke:                                      *
+* http://paulbourke.net/geometry/torus/                              *
 *                                                                    *
 * Autor: RndMnkIII (rndmnkiii@gmail.com). 2017                       *
 * Ft81xTeam -> https://foro.ft81xmania.com                           *
