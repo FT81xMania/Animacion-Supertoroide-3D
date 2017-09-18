@@ -1,6 +1,6 @@
 #ifndef _quickcg_h_included
 #define _quickcg_h_included
-#include <GD23STM32.h>
+#include <GD2UB.h>
 
 #include <string>
 #include <sstream>
